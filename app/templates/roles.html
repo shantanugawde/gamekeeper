@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="vertical-align: center;">
+    <div style="text-align:center">
+        <h2>Roles</h2>
+    </div>
+    <hr>
+    {% if all_roles|length > 0 %}
+    <!--</div>-->
+    <table class="table table-striped table-hover">
+        <tr>
+            <th>Role ID</th>
+            <th>Role Name</th>
+            {% for res in all_res %}<th>{{ res.name }}</th>{% endfor %}
+            <th align="right"></th>
+        </tr>
+        {% for role in all_roles %}
+        <tr>
+            <td>{{ role.id }}</td>
+            <td>{{ role.name }}</td>
+            {% for res in all_res %}
+                <td>
+                    {% if role.has_resource(res) and role.can(res, 1)%}
+                    <span class="label label-primary" style="font-size: 14px">Read</span>
+                    {% else %}
+                    <span class="label label-default" style="font-size: 14px">Read</span>
+                    {% endif %}
+                    {% if role.has_resource(res) and role.can(res, 2)%}
+                    <span class="label label-primary" style="font-size: 14px">Write</span>
+                    {% else %}
+                    <span class="label label-default" style="font-size: 14px">Write</span>
+                    {% endif %}
+                    {% if role.has_resource(res) and role.can(res, 4)%}
+                    <span class="label label-primary" style="font-size: 14px">Delete</span>
+                    {% else %}
+                    <span class="label label-default" style="font-size: 14px">Delete</span>
+                    {% endif %}
+                </td>
+            {% endfor %}
+            <td align="right">
+                <div class="btn-group" role="group">
+                    <a href="{{ url_for('editrole', roleid=role.id) }}" role="button" class="btn btn-warning btn-md">Edit</a>
+                    <a href="{{ url_for('deleterole', roleid=role.id) }}" role="button"
+                       class="btn btn-danger btn-md">Delete</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    *<div style="text-align:center">
+        <h3>No roles added</h3>
+    </div>
+    {% endif %}
+    <div style="text-align:center">
+        <a href="{{ url_for('addrole') }}" role="button" class="btn btn-md btn-success" style="margin-top: 10px">
+            Add New Role</a>
+    </div>
+</div> <!-- /container -->
+{% endblock %}

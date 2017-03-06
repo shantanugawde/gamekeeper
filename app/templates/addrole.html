@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="vertical-align: center;">
+    <div style="text-align:center">
+        <h2>{% if isedit %}Edit{% else %}Add{% endif %} Role</h2>
+    </div>
+    <hr>
+    <form class="form-signin" action="" method="post" name="registration">
+        {{ form.hidden_tag() }}
+
+        <label for="name" class="sr-only">Name</label>
+        {{ form.name(class="form-control", placeholder="Enter name of role..", style="margin-bottom: 5px;") }}
+
+        {% if all_res|length > 0 %}
+        <!--</div>-->
+        <table class="table table-striped table-hover">
+            <tr>
+                <th>Sr. No.</th>
+                <th>Resource Name</th>
+                <th>Read</th>
+                <th>Write</th>
+                <th>Delete</th>
+            </tr>
+            {% for resource in all_res %}
+            <tr>
+                <td>{{ resource.id }}</td>
+                <td>{{ resource.name }}</td>
+                <td id="read{{ resource.id }}"></td>
+                <td id="write{{ resource.id }}"></td>
+                <td id="delete{{ resource.id }}"></td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <div style="text-align:center">
+            <h3>No resources added</h3>
+        </div>
+        {% endif %}
+
+        <div style="text-align: center; color: #CC0000;">
+            {% for field, errors in form.errors.items() %}
+            {% for error in errors %}
+            {{ error }}<br>
+            {% endfor %}
+            {% endfor %}
+            {% if g.myerror != "" %}
+            {{g.myerror}}<br>
+            {% endif %}
+        </div>
+
+        <div style="margin: 10px 0px 10px 0px;text-align:center;">
+            <button class="btn btn-md btn-primary" type="submit">
+                {% if isedit %}Update{% else %}Add{% endif %}
+            </button>
+            {% if isedit %}<a href="{{ url_for('roles') }}" role="button"
+                              class="btn btn-warning btn-">Cancel</a>{% endif %}
+        </div>
+    </form>
+</div> <!-- /container -->
+{% endblock %}
+{% block headscript %}
+<script>
+    $(function(){
+        {% if isedit %}
+        $("#name").val("{{role.name}}");
+        {% for chk in form.read_resources %}
+            {% if role.can(all_res[chk.data|int -1], 1) %}
+            $("#read{{chk.data}}").append('{{chk(checked="true")}}');
+            {% else %}
+            $("#read{{chk.data}}").append('{{chk}}');
+            {% endif %}
+        {% endfor %}
+
+        {% for chk in form.write_resources %}
+            {% if role.can(all_res[chk.data|int -1], 2) %}
+            $("#write{{chk.data}}").append('{{chk(checked="true")}}');
+            {% else %}
+            $("#write{{chk.data}}").append('{{chk}}');
+            {% endif %}
+        {% endfor %}
+
+        {% for chk in form.delete_resources %}
+            {% if role.can(all_res[chk.data|int -1], 4) %}
+            $("#delete{{chk.data}}").append('{{chk(checked="true")}}');
+            {% else %}
+            $("#delete{{chk.data}}").append('{{chk}}');
+            {% endif %}
+        {% endfor %}
+
+        {% else %}
+
+        {% for chk in form.read_resources %}
+            $("#read{{chk.data}}").append('{{chk}}');
+        {% endfor %}
+
+        {% for chk in form.write_resources %}
+            $("#write{{chk.data}}").append('{{chk}}');
+        {% endfor %}
+
+        {% for chk in form.delete_resources %}
+            $("#delete{{chk.data}}").append('{{chk}}');
+        {% endfor %}
+
+        {% endif %}
+    });
+
+
+
+</script>
+{% endblock %}

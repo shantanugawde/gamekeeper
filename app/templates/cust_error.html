@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" align="center" >
+
+<div class="row">
+
+    <div class="col-sm-10 col-sm-offset-1">
+
+        <h3>{{msg}}</h3>
+        <h3><a href="{{url_for('index')}}">Back to Home</a></h3>
+        <!-- <p><a class="btn btn-embossed btn-primary view" role="button">View Details</a></p> -->
+    </div><!-- /.col-lg-4 -->
+
+</div><!-- /.row -->
+</div>
+{% endblock %}

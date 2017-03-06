@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container" style="vertical-align: center; max-width:500px;">
+            <form class="form-signin" action="" method="post" name="registration">
+                {{ form.hidden_tag() }}
+                <h2 class="form-signin-heading">Create User</h2>
+
+                <label for="name" class="sr-only">Name</label>
+                    {{ form.name(class="form-control", placeholder="Name", style="margin-bottom: 5px;") }}
+                <label for="email" class="sr-only">Email address</label>
+                    {{ form.email(class="form-control", placeholder="Email", style="margin-bottom: 5px;") }}
+
+                <ul class="list-group">
+                    <h4>Roles</h4>
+                    {% for role in form.user_roles %}
+                        <li class="list-group-item">
+                            {{ role(style="margin-right: 15px") }}{{ role.label }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                <div style="text-align: center; color: #CC0000;">
+                    {% for field, errors in form.errors.items() %}
+                            {% for error in errors %}
+                                {{ error }}<br>
+                            {% endfor %}
+                    {% endfor %}
+                    {% if g.myerror != "" %}
+                    {{g.myerror}}<br>
+                    {% endif %}
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" style="margin: 10px 0px 10px 0px;" type="submit">
+                    Create
+                </button>
+            </form>
+    </div> <!-- /container -->
+{% endblock %}

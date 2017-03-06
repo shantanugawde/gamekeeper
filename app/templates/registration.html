@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container" style="vertical-align: center; max-width:500px;">
+
+    {% if noroles %}
+    <div style="text-align:center">
+        <h3>Create <a href="{{url_for('addrole')}}">roles</a> before adding users</h3>
+    </div>
+    {% else %}
+    <form class="form-signin" action="" method="post" name="registration">
+        <h2 class="form-signin-heading">{% if isedit %}Edit{% else %}Create{% endif %} User</h2>
+        {{ form.hidden_tag() }}
+
+        <label for="name" class="sr-only">Name</label>
+        {{ form.name(class="form-control", placeholder="Name", style="margin-bottom: 5px;") }}
+        <label for="email" class="sr-only">Email address</label>
+        {{ form.email(class="form-control", placeholder="Email", style="margin-bottom: 5px;") }}
+
+        <ul class="list-group">
+            <h4>Roles</h4>
+            {% for role in form.user_roles %}
+            <li class="list-group-item">
+                {% if role.data in cur_roles %}
+                {{ role(style="margin-right: 15px", checked="true") }}{{ role.label }}
+                {% else %}
+                {{ role(style="margin-right: 15px") }}{{ role.label }}
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+
+        <div style="text-align: center; color: #CC0000;">
+            {% for field, errors in form.errors.items() %}
+            {% for error in errors %}
+            {{ error }}<br>
+            {% endfor %}
+            {% endfor %}
+            {% if g.myerror != "" %}
+            {{g.myerror}}<br>
+            {% endif %}
+        </div>
+        <div style="margin: 10px 0px 10px 0px;text-align:center;">
+            <button class="btn btn-md btn-primary" type="submit">
+                {% if isedit %}Update{% else %}Create{% endif %}
+            </button>
+            {% if isedit %}<a href="{{ url_for('users') }}" role="button"
+                              class="btn btn-warning btn-">Cancel</a>{% endif %}
+        </div>
+    </form>
+    {% endif %}
+</div> <!-- /container -->
+{% endblock %}
+{% block headscript %}
+<script>
+    $(function(){
+    {% if isedit %}
+        $("#name").val("{{user.name}}");
+        $("#email").val("{{user.email}}");
+    {% endif %}
+    });
+
+
+
+</script>
+{% endblock %}
