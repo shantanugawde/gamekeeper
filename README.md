@@ -19,5 +19,6 @@ Dependencies
 - flask-wtf
 - flask-sqlalchemy
 - sqlalchemy-migrate
+- flask-login
 
 You will also need flask-login or an appropriate extension to implement this RBAC in your login process
